@@ -25,4 +25,7 @@ public interface InterviewRepository extends JpaRepository<Interview, Long> {
     boolean existsByCandidateIdAndInterviewDateAndInterviewTime
             (Long candidateId,
              LocalDate interviewDate, LocalTime interviewTime);
+
+    List<Interview> findByCandidateIdOrInterviewerId(Long candidateId,
+                                                     Long interviewerId);
 }
