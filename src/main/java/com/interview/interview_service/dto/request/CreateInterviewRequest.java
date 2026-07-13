@@ -1,5 +1,6 @@
 package com.interview.interview_service.dto.request;
 
+import com.interview.interview_service.enums.InterviewMode;
 import com.interview.interview_service.enums.InterviewRound;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
@@ -36,6 +37,9 @@ public class CreateInterviewRequest {
 
     @NotNull(message = "Interview time is required")
     private LocalTime interviewTime;
+
+    @NotNull(message = "Interview mode is required")
+    private InterviewMode interviewMode;
 
     private String meetingLink;
 

@@ -20,6 +20,8 @@ public interface InterviewMapper {
     @Mapping(target = "updatedAt",ignore = true)
     Interview toEntity(CreateInterviewRequest request);
 
+    @Mapping(target = "candidate", ignore = true)
+    @Mapping(target = "interviewer", ignore = true)
     InterviewResponse toResponse(Interview interview);
 
     List<InterviewResponse> toResponseList(List<Interview> interviews);

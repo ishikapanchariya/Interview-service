@@ -5,20 +5,21 @@ import com.interview.interview_service.dto.request.FeedbackRequest;
 import com.interview.interview_service.dto.request.RescheduleInterviewRequest;
 import com.interview.interview_service.dto.request.UpdateInterviewRequest;
 import com.interview.interview_service.dto.response.ApiResponse;
+import com.interview.interview_service.dto.response.InterviewResponse;
 
 import java.util.List;
 
 public interface InterviewService {
 
-    ApiResponse<InterviewService> scheduleInterview(CreateInterviewRequest request);
-    ApiResponse<InterviewService> getInterviewById(Long interviewId);
-    ApiResponse<List<InterviewService>> getAllInterviews();
-    ApiResponse<List<InterviewService>> getCandidateInterviews(Long candidateId);
-    ApiResponse<List<InterviewService>> getInterviewerInterviews(Long interviewerId);
-    ApiResponse<InterviewService> updateInterview(Long InterviewerId, UpdateInterviewRequest request);
-    ApiResponse<InterviewService>rescheduleInterview(Long InterviewerId, RescheduleInterviewRequest request);
-    ApiResponse<InterviewService> cancelInterview(Long InterviewerId);
-    ApiResponse<InterviewService>completeInterview(Long InterviewerId);
-    ApiResponse<InterviewService>addFeedback(Long InterviewerId, FeedbackRequest  request);
+    ApiResponse<InterviewResponse> scheduleInterview(CreateInterviewRequest request);
+    ApiResponse<InterviewResponse> getInterviewById(Long interviewId);
+    ApiResponse<List<InterviewResponse>> getAllInterviews();
+    ApiResponse<List<InterviewResponse>> getCandidateInterviews(Long candidateId);
+    ApiResponse<List<InterviewResponse>> getInterviewerInterviews(Long interviewerId);
+    ApiResponse<InterviewResponse> updateInterview(Long interviewId, UpdateInterviewRequest request);
+    ApiResponse<InterviewResponse> rescheduleInterview(Long interviewId, RescheduleInterviewRequest request);
+    ApiResponse<InterviewResponse> cancelInterview(Long interviewId);
+    ApiResponse<InterviewResponse> completeInterview(Long interviewId);
+    ApiResponse<InterviewResponse> addFeedback(Long interviewId, FeedbackRequest request);
 
 }
