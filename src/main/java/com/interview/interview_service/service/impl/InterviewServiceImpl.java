@@ -18,6 +18,7 @@ import com.interview.interview_service.repository.InterviewRepository;
 import com.interview.interview_service.service.InterviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -82,6 +83,7 @@ public class InterviewServiceImpl implements InterviewService {
     }
 
     @Override
+    @Transactional
     public ApiResponse<InterviewResponse> scheduleInterview(CreateInterviewRequest request) {
         UserResponse candidate = getCandidate(request.getCandidateId());
         validateCandidate(candidate);
@@ -223,6 +225,7 @@ public class InterviewServiceImpl implements InterviewService {
     }
 
     @Override
+    @Transactional
     public ApiResponse<InterviewResponse> updateInterview(Long interviewId, UpdateInterviewRequest request) {
         Interview interview = getInterview(interviewId);
 
@@ -251,6 +254,7 @@ public class InterviewServiceImpl implements InterviewService {
     }
 
     @Override
+    @Transactional
     public ApiResponse<InterviewResponse> rescheduleInterview(Long interviewId, RescheduleInterviewRequest request) {
         Interview interview = getInterview(interviewId);
 
@@ -282,6 +286,7 @@ public class InterviewServiceImpl implements InterviewService {
     }
 
     @Override
+    @Transactional
     public ApiResponse<InterviewResponse> cancelInterview(Long interviewId) {
         Interview interview = getInterview(interviewId);
         interview.setStatus(InterviewStatus.CANCELLED);
@@ -308,6 +313,7 @@ public class InterviewServiceImpl implements InterviewService {
     }
 
     @Override
+    @Transactional
     public ApiResponse<InterviewResponse> completeInterview(Long interviewId) {
         Interview interview = getInterview(interviewId);
         interview.setStatus(InterviewStatus.COMPLETED);
@@ -334,6 +340,7 @@ public class InterviewServiceImpl implements InterviewService {
     }
 
     @Override
+    @Transactional
     public ApiResponse<InterviewResponse> addFeedback(Long interviewId, FeedbackRequest request) {
         Interview interview = getInterview(interviewId);
         interview.setFeedback(request.getFeedback());

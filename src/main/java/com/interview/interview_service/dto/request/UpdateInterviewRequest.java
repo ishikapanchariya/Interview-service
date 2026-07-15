@@ -20,7 +20,7 @@ public class UpdateInterviewRequest {
     @NotBlank(message = "Job title is required")
     private String jobTitle;
 
-    @NotBlank(message = "Interview round is required")
+    @NotNull(message = "Interview round is required")
     private InterviewRound round;
 
     @NotNull(message = "Interview date is required")

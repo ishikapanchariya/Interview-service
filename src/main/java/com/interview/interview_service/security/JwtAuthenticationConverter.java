@@ -30,7 +30,7 @@ public class JwtAuthenticationConverter extends OncePerRequestFilter {
         //Read authorization header
         final String authHeader = request.getHeader("Authorization");
 
-        if(authHeader == null && !authHeader.startsWith("Bearer ")) {
+        if(authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -48,7 +48,7 @@ public class JwtAuthenticationConverter extends OncePerRequestFilter {
         //Create Authentication
         UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(username,null,
-                        List.of(new SimpleGrantedAuthority(role))
+                        List.of(new SimpleGrantedAuthority("ROLE_" + role))
                 );
 
         authentication.setDetails(new WebAuthenticationDetailsSource()

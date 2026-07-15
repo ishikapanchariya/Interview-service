@@ -24,4 +24,9 @@ public class FeignConfig {
             }
         };
     }
+
+    @Bean
+    public feign.codec.ErrorDecoder errorDecoder() {
+        return new com.interview.interview_service.feign.CustomFeignErrorDecoder();
+    }
 }

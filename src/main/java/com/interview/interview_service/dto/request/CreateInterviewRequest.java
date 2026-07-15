@@ -27,7 +27,7 @@ public class CreateInterviewRequest {
     @NotBlank(message = "Job title is required")
     private String jobTitle;
 
-    @NotBlank(message = "interview round is required")
+    @NotNull(message = "interview round is required")
     private InterviewRound round;
 
     @NotNull(message = "Interview date is required")
