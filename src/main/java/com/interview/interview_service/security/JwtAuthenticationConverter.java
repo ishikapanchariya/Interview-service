@@ -48,7 +48,7 @@ public class JwtAuthenticationConverter extends OncePerRequestFilter {
         //Create Authentication
         UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(username,null,
-                        List.of(new SimpleGrantedAuthority("ROLE_" + role))
+                        List.of(new SimpleGrantedAuthority(role))
                 );
 
         authentication.setDetails(new WebAuthenticationDetailsSource()

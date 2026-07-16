@@ -9,6 +9,7 @@ import com.interview.interview_service.dto.response.InterviewResponse;
 import com.interview.interview_service.service.InterviewService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ public class InterviewController {
     @PostMapping
     public ResponseEntity<ApiResponse<InterviewResponse>> scheduleInterview(
             @Valid @RequestBody CreateInterviewRequest request) {
-        return ResponseEntity.ok(interviewService.scheduleInterview(request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(interviewService.scheduleInterview(request));
     }
 
     @GetMapping("/{id}")

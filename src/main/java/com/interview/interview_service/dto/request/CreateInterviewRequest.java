@@ -27,12 +27,11 @@ public class CreateInterviewRequest {
     @NotBlank(message = "Job title is required")
     private String jobTitle;
 
-    @NotNull(message = "interview round is required")
+    @NotBlank(message = "interview round is required")
     private InterviewRound round;
 
     @NotNull(message = "Interview date is required")
     @Future(message = "Interview date must be in the future")
-    //Prevents scheduling interviews in the past
     private LocalDate interviewDate;
 
     @NotNull(message = "Interview time is required")

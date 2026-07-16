@@ -323,12 +323,12 @@ public class InterviewServiceImpl implements InterviewService {
         try {
             response.setCandidate(getCandidate(updatedInterview.getCandidateId()));
         } catch (Exception e) {
-            // ignore
+            // jane de
         }
         try {
             response.setInterviewer(getInterviewer(updatedInterview.getInterviewerId()));
         } catch (Exception e) {
-            // ignore
+            // jane de
         }
 
         return ApiResponse.<InterviewResponse>builder()
