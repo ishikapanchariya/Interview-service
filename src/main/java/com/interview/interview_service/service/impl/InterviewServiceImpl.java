@@ -16,7 +16,11 @@ import com.interview.interview_service.feign.UserServiceClient;
 import com.interview.interview_service.mapper.InterviewMapper;
 import com.interview.interview_service.repository.InterviewRepository;
 import com.interview.interview_service.service.InterviewService;
+import com.interview.interview_service.dto.request.SendNotificationRequest;
+import com.interview.interview_service.enums.NotificationType;
+import com.interview.interview_service.feign.NotificationServiceClient;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,12 +29,14 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class InterviewServiceImpl implements InterviewService {
     private final InterviewRepository interviewRepository;
     private final InterviewMapper interviewMapper;
     private final UserServiceClient userServiceClient;
+    private final NotificationServiceClient notificationServiceClient;
 
     // Fetch Interview by Id
     private Interview getInterview(Long interviewId) {
@@ -101,6 +107,24 @@ public class InterviewServiceImpl implements InterviewService {
         InterviewResponse response = interviewMapper.toResponse(savedInterview);
         response.setCandidate(candidate);
         response.setInterviewer(interviewer);
+
+        // Trigger notifications for Candidate & Interviewer
+        triggerNotification(candidate != null ? candidate.getId() : null, candidate != null ? candidate.getEmail() : null,
+                "Interview Scheduled: " + request.getJobTitle(),
+                "Your " + request.getRound() + " interview is scheduled on " + request.getInterviewDate() + " at " + request.getInterviewTime(),
+                NotificationType.EMAIL);
+
+        triggerNotification(candidate != null ? candidate.getId() : null, candidate != null ? candidate.getEmail() : null,
+                "Interview Scheduled",
+                "New interview scheduled for " + request.getJobTitle() + " on " + request.getInterviewDate(),
+                NotificationType.IN_APP);
+
+        if (interviewer != null) {
+            triggerNotification(interviewer.getId(), interviewer.getEmail(),
+                    "Assigned Interview: " + request.getJobTitle(),
+                    "You have been assigned an interview for " + request.getJobTitle() + " on " + request.getInterviewDate() + " at " + request.getInterviewTime(),
+                    NotificationType.EMAIL);
+        }
 
         return ApiResponse.<InterviewResponse>builder()
                 .success(true)
@@ -277,6 +301,18 @@ public class InterviewServiceImpl implements InterviewService {
             // ignore
         }
 
+        // Trigger reschedule notification
+        if (response.getCandidate() != null) {
+            triggerNotification(response.getCandidate().getId(), response.getCandidate().getEmail(),
+                    "Interview Rescheduled",
+                    "Your interview slot has been rescheduled to " + request.getInterviewDate() + " at " + request.getInterviewTime(),
+                    NotificationType.EMAIL);
+            triggerNotification(response.getCandidate().getId(), response.getCandidate().getEmail(),
+                    "Interview Rescheduled",
+                    "Interview rescheduled to " + request.getInterviewDate(),
+                    NotificationType.IN_APP);
+        }
+
         return ApiResponse.<InterviewResponse>builder()
                 .success(true)
                 .message("Interview rescheduled successfully")
@@ -302,6 +338,18 @@ public class InterviewServiceImpl implements InterviewService {
             response.setInterviewer(getInterviewer(updatedInterview.getInterviewerId()));
         } catch (Exception e) {
             // ignore
+        }
+
+        // Trigger cancellation notification
+        if (response.getCandidate() != null) {
+            triggerNotification(response.getCandidate().getId(), response.getCandidate().getEmail(),
+                    "Interview Cancelled",
+                    "Your scheduled interview has been cancelled.",
+                    NotificationType.EMAIL);
+            triggerNotification(response.getCandidate().getId(), response.getCandidate().getEmail(),
+                    "Interview Cancelled",
+                    "Interview session was cancelled.",
+                    NotificationType.IN_APP);
         }
 
         return ApiResponse.<InterviewResponse>builder()
@@ -364,5 +412,20 @@ public class InterviewServiceImpl implements InterviewService {
                 .data(response)
                 .timestamp(LocalDateTime.now())
                 .build();
+    }
+
+    private void triggerNotification(Long userId, String recipient, String subject, String message, NotificationType type) {
+        if (recipient == null && userId == null) return;
+        try {
+            notificationServiceClient.sendNotification(SendNotificationRequest.builder()
+                    .userId(userId)
+                    .recipient(recipient)
+                    .subject(subject)
+                    .message(message)
+                    .type(type)
+                    .build());
+        } catch (Exception e) {
+            log.warn("Failed to send {} notification to {}: {}", type, recipient != null ? recipient : userId, e.getMessage());
+        }
     }
 }

@@ -13,7 +13,9 @@ public class FeignConfig {
     public RequestInterceptor requestInterceptor() {
         return requestTemplate ->
         {
-            ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+            ServletRequestAttributes attributes = 
+            (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+            
             if (attributes != null) {
                 HttpServletRequest request = attributes.getRequest();
                 String authorization = request.getHeader("Authorization");

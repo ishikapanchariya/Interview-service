@@ -4,7 +4,6 @@ import com.interview.interview_service.enums.InterviewMode;
 import com.interview.interview_service.enums.InterviewRound;
 import com.interview.interview_service.enums.InterviewStatus;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -44,7 +43,7 @@ public class Interview {
     private InterviewRound round;
 
     @Enumerated(EnumType.STRING)
-    @NotNull(message = "Interview mode is required")
+    @Column(nullable = false)
     private InterviewMode interviewMode;
 
     @Column(length = 200)
